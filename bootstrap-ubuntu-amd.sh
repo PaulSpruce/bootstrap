@@ -4,17 +4,14 @@
 # Creates a sudo user, configures SSHD
 
 if [ -z $4 ]; then
-	echo "usage: $(basename $0) hostname username password sshdport"
+	echo "usage: $(basename $0) username password sshdport"
 	exit 1
 fi
 
-_HOSTNAME=$1
-_USER=$2
-PASSWORD=$3
-SSHPORT=$4
+_USER=$1
+PASSWORD=$2
+SSHPORT=$3
 
-# Host, time config
-hostnamectl hostname $_HOSTNAME
 ln -sf /usr/share/zoneinfo/Australia/Adelaide /etc/localtime
 hwclock --systohc --utc
 
