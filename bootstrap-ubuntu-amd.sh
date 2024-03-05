@@ -19,7 +19,7 @@ sudo hwclock --systohc --utc
 
 # Add sudo user
 sudo useradd -m -U -s /bin/bash -G sudo $user
-sudo sh -c 'echo "$user:$password | chpasswd'
+sudo sh -c 'echo "$user:$password" | chpasswd'
 sudo sh -c 'echo -e "$user ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/00_$user'
 sudo cp -r .ssh/ /home/administrator/
 sudo chown administrator:administrator /home/administrator/.ssh
@@ -42,8 +42,7 @@ echo "Upload vps SSH keys to $user account (sftp ${user}@ip.address) and press E
 read -r
 echo "Continuing..."
 
-
-sudo su $user -c "GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git clone git@$git_site:$git_user/dotfiles.git /home/$user/.dotfiles"
+#sudo su $user -c "GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git clone git@$git_site:$git_user/dotfiles.git /home/$user/.dotfiles"
 
 if [ -f /home/$user/.dotfiles/.local/bin/dotfiles.sh ]; then
 	sudo su $user -c "/home/$user/.dotfiles/.local/bin/dotfiles.sh vps"
