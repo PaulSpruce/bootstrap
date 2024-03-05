@@ -3,30 +3,32 @@
 # Ubuntu Bootstrap
 # Creates a sudo user, configures SSHD
 
-if [ $# -ne 3 ]; then
-	echo "usage: $(basename $0) username password sshdport"
+if [ $# -ne 4 ]; then
+	echo "usage: $(basename $0) username password sshdport privatekey"
 	exit 1
 fi
 
-_USER=$1
-PASSWORD=$2
-SSHPORT=$3
+user="$1"
+password="$2"
+ssh_port="$3"
+priv_key="$4"
 
 sudo ln -sf /usr/share/zoneinfo/Australia/Adelaide /etc/localtime
+echo "fs.inotify.max_user_watches=204800" | sudo tee -a /etc/sysctl.conf
 sudo hwclock --systohc --utc
 
-# Apt
-sudo apt-get -y purge needrestart
-sudo apt-get -y update && sudo apt-get -y upgrade
 
 # Add sudo user
-sudo useradd -m -U -s /bin/bash -G sudo $_USER
-sudo sh -c 'echo "$_USER:$PASSWORD | chpasswd'
-sudo sh -c 'echo -e "$_USER ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/00_$_USER'
+sudo useradd -m -U -s /bin/bash -G sudo $user
+sudo sh -c 'echo "$user:$password | chpasswd'
+sudo sh -c 'echo -e "$user ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/00_$user'
+sudo cp -r .ssh/ /home/administrator/
+echo "$priv_key" | sudo tee /home/administrator/.ssh/id_rsa
+sudo chown administrator:administrator /home/administrator/.ssh
 
 # Set up sshd: disable root login, change port, disable password auth
 sudo cat << EOF > /etc/ssh/sshd_config.d/50-local.conf
-Port $SSHPORT
+Port $ssh_port
 PermitRootLogin no
 PasswordAuthentication no
 KbdInteractiveAuthentication no
@@ -34,6 +36,16 @@ PubkeyAuthentication yes
 EOF
 sudo systemctl enable --now sshd.service
 sudo systemctl restart sshd.service
+
+# Install dotfiles and apps
+sudo apt-get -y purge needrestart
+sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get install -y git
+sudo su $user -c "GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git clone git@$git_site:$git_user/dotfiles.git /home/$user/.dotfiles"
+
+if [ -f /home/$user/.dotfiles/.local/bin/dotfiles.sh ]; then
+	sudo su $user -c "/home/$user/.dotfiles/.local/bin/dotfiles.sh vps"
+	#sudo su $user -c "/home/$user/.dotfiles/.local/bin/debian-install.sh vps | tee /tmp/debian-install.log"
+fi
 
 echo ""
 echo "#########################################################################"
