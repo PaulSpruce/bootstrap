@@ -12,28 +12,28 @@ _USER=$1
 PASSWORD=$2
 SSHPORT=$3
 
-ln -sf /usr/share/zoneinfo/Australia/Adelaide /etc/localtime
-hwclock --systohc --utc
+sudo ln -sf /usr/share/zoneinfo/Australia/Adelaide /etc/localtime
+sudo hwclock --systohc --utc
 
 # Apt
 sudo apt-get purge needrestart
 sudo apt-get -y update && sudo apt-get -y upgrade
 
 # Add sudo user
-useradd -m -U -s /bin/bash -G sudo $_USER
-echo "$_USER:$PASSWORD" | chpasswd
-echo -e "$_USER ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/00_$_USER
+sudo useradd -m -U -s /bin/bash -G sudo $_USER
+sudo sh -c echo "$_USER:$PASSWORD | chpasswd"
+sudo sh -c echo -e "$_USER ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/00_$_USER
 
 # Set up sshd: disable root login, change port, disable password auth
-cat << EOF > /etc/ssh/sshd_config.d/50-local.conf
+sudo cat << EOF > /etc/ssh/sshd_config.d/50-local.conf
 Port $SSHPORT
 PermitRootLogin no
 PasswordAuthentication no
 KbdInteractiveAuthentication no
 PubkeyAuthentication yes
 EOF
-systemctl enable --now sshd.service
-systemctl restart sshd.service
+sudo systemctl enable --now sshd.service
+sudo systemctl restart sshd.service
 
 echo ""
 echo "#########################################################################"
