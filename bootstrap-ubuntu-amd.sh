@@ -16,7 +16,7 @@ sudo ln -sf /usr/share/zoneinfo/Australia/Adelaide /etc/localtime
 sudo hwclock --systohc --utc
 
 # Apt
-sudo apt-get purge needrestart
+sudo apt-get -y purge needrestart
 sudo apt-get -y update && sudo apt-get -y upgrade
 
 # Add sudo user
