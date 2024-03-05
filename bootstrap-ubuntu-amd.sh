@@ -21,8 +21,8 @@ sudo apt-get -y update && sudo apt-get -y upgrade
 
 # Add sudo user
 sudo useradd -m -U -s /bin/bash -G sudo $_USER
-sudo sh -c echo "$_USER:$PASSWORD | chpasswd"
-sudo sh -c echo -e "$_USER ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/00_$_USER
+sudo sh -c 'echo "$_USER:$PASSWORD | chpasswd'
+sudo sh -c 'echo -e "$_USER ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/00_$_USER'
 
 # Set up sshd: disable root login, change port, disable password auth
 sudo cat << EOF > /etc/ssh/sshd_config.d/50-local.conf
