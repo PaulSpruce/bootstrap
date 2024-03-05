@@ -19,7 +19,7 @@ sudo hwclock --systohc --utc
 
 # Add sudo user
 sudo useradd -m -U -s /bin/bash -G sudo $user
-sudo sh -c 'echo "$user:$password" | chpasswd'
+echo "$user:$password" | sudo chpasswd
 sudo sh -c 'echo -e "$user ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/00_$user'
 sudo cp -r .ssh/ /home/administrator/
 sudo chown administrator:administrator /home/administrator/.ssh
