@@ -3,7 +3,7 @@
 # Ubuntu Bootstrap
 # Creates a sudo user, configures SSHD
 
-if [ -z $4 ]; then
+if [ $# -ne 3 ]; then
 	echo "usage: $(basename $0) username password sshdport"
 	exit 1
 fi
