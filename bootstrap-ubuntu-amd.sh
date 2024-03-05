@@ -25,13 +25,12 @@ sudo cp -r .ssh/ /home/administrator/
 sudo chown administrator:administrator /home/administrator/.ssh
 
 # Set up sshd: disable root login, change port, disable password auth
-sudo cat << EOF > /etc/ssh/sshd_config.d/50-local.conf
-Port $ssh_port
+echo "Port $ssh_port
 PermitRootLogin no
 PasswordAuthentication no
 KbdInteractiveAuthentication no
-PubkeyAuthentication yes
-EOF
+PubkeyAuthentication yes" | sudo tee /etc/ssh/sshd_config.d/50-local.conf > /dev/null
+
 sudo systemctl enable --now sshd.service
 sudo systemctl restart sshd.service
 
