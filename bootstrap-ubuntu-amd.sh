@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#Debian Bootstrap
-#Creates a sudo user, configures SSHD
+# Ubuntu Bootstrap
+# Creates a sudo user, configures SSHD
 
 if [ -z $4 ]; then
 	echo "usage: $(basename $0) hostname username password sshdport"
@@ -19,8 +19,8 @@ ln -sf /usr/share/zoneinfo/Australia/Adelaide /etc/localtime
 hwclock --systohc --utc
 
 # Apt
-apt-get -y update && apt-get -y upgrade
-apt-get install -y sudo openssh-server
+sudo apt-get purge needrestart
+sudo apt-get -y update && sudo apt-get -y upgrade
 
 # Add sudo user
 useradd -m -U -s /bin/bash -G sudo $_USER
