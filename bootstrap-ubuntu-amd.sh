@@ -3,15 +3,14 @@
 # Ubuntu Bootstrap
 # Creates a sudo user, configures SSHD
 
-if [ $# -ne 4 ]; then
-	echo "usage: $(basename $0) username password sshdport privatekey"
+if [ $# -ne 3 ]; then
+	echo "usage: $(basename $0) username password sshdport"
 	exit 1
 fi
 
 user="$1"
 password="$2"
 ssh_port="$3"
-priv_key="$4"
 
 sudo ln -sf /usr/share/zoneinfo/Australia/Adelaide /etc/localtime
 echo "fs.inotify.max_user_watches=204800" | sudo tee -a /etc/sysctl.conf
@@ -23,7 +22,6 @@ sudo useradd -m -U -s /bin/bash -G sudo $user
 sudo sh -c 'echo "$user:$password | chpasswd'
 sudo sh -c 'echo -e "$user ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/00_$user'
 sudo cp -r .ssh/ /home/administrator/
-echo "$priv_key" | sudo tee /home/administrator/.ssh/id_rsa
 sudo chown administrator:administrator /home/administrator/.ssh
 
 # Set up sshd: disable root login, change port, disable password auth
@@ -40,6 +38,12 @@ sudo systemctl restart sshd.service
 # Install dotfiles and apps
 sudo apt-get -y purge needrestart
 sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get install -y git
+
+echo "Upload vps SSH keys to $user account (sftp ${user}@ip.address) and press Enter to continue:"
+read -r
+echo "Continuing..."
+
+
 sudo su $user -c "GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git clone git@$git_site:$git_user/dotfiles.git /home/$user/.dotfiles"
 
 if [ -f /home/$user/.dotfiles/.local/bin/dotfiles.sh ]; then
