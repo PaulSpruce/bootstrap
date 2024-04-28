@@ -41,8 +41,8 @@ echo ""
 echo "#########################################################################"
 echo "### Complete! Now log in as user.                                     ###"
 echo "### If required generate an SSH key:                                  ###"
-echo '### $ ssh-keygen                                                      ###' 
-echo "### Add key to https://gitlab                                         ###"
+echo '### $ ssh-keygen                                                      ###'
+echo '### Add key https://gitlab.com/-/user_settings/ssh_keys               ###'
 echo "### Clone or sync dotfiles:                                           ###"
 echo '### $ git clone git@gitlab.com:namalsk/dotfiles.git ~/.dotfiles       ###'
 echo "#########################################################################"
