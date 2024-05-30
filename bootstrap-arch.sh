@@ -15,7 +15,7 @@ SSHPORT=$4
 
 # Host, time config
 hostnamectl hostname $_HOSTNAME
-ln -sf /usr/share/zoneinfo/Australia/Adelaide /etc/localtime
+#ln -sf /usr/share/zoneinfo/Australia/Adelaide /etc/localtime
 hwclock --systohc --utc
 
 # Pacman
