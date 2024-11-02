@@ -16,6 +16,7 @@ SSHPORT=$4
 # Host, time config
 hostnamectl hostname $_HOSTNAME
 #ln -sf /usr/share/zoneinfo/Australia/Adelaide /etc/localtime
+ln -sf /usr/share/zoneinfo/GB /etc/localtime
 hwclock --systohc --utc
 
 # Apt
@@ -25,7 +26,7 @@ apt-get install -y sudo openssh-server
 # Add sudo user
 useradd -m -U -s /bin/bash -G sudo $_USER
 echo "$_USER:$PASSWORD" | chpasswd
-echo -e "$_USER ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/00_$_USER
+echo -e "$_USER ALL=(ALL) NOPASSWD: ALL\nDefaults lecture = never" > /etc/sudoers.d/zz_$_USER
 
 # Set up sshd: disable root login, change port, disable password auth
 cat << EOF > /etc/ssh/sshd_config.d/50-local.conf
